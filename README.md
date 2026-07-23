@@ -12,7 +12,7 @@ server-side search / filtering / pagination, and mirrored client-side validation
 
 | Layer     | Technology                          |
 |-----------|-------------------------------------|
-| Backend   | Laravel 13 (PHP 8.3), Sanctum       |
+| Backend   | Laravel 13 (PHP 8.4), Sanctum       |
 | Frontend  | React 19 + Vite, Tailwind CSS v4    |
 | Database  | MySQL 8                             |
 | Dev tooling (optional) | Docker + Docker Compose |
@@ -46,4 +46,4 @@ _Full, step-by-step non-Docker instructions (prerequisites, `.env` setup,
 `composer install`, `npm install`, migrations, seeding, running both apps,
 seeded credentials, and how to run tests) will be completed in Phase 5._
 
-Prerequisites: PHP 8.3, Composer 2, Node 24 (see `frontend/.nvmrc`), MySQL 8.
+Prerequisites: PHP 8.4, Composer 2, Node 24 (see `frontend/.nvmrc`), MySQL 8.

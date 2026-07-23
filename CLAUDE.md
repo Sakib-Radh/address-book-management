@@ -5,7 +5,7 @@ A decoupled Address Book manager: a Laravel REST API (`backend/`) and a React SP
 (`frontend/`), authenticated with Laravel Sanctum tokens, backed by MySQL.
 
 ## Tech stack
-- **Backend:** Laravel 13, PHP 8.3, Laravel Sanctum (token auth)
+- **Backend:** Laravel 13, PHP 8.4, Laravel Sanctum (token auth)
 - **Frontend:** React 19, Vite, Tailwind CSS v4, Axios, React Router
 - **Database:** MySQL 8
 - **Optional dev tooling:** Docker + Docker Compose
