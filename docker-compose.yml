@@ -1,0 +1,80 @@
+# Docker is OPTIONAL for this project (bonus). It brings up the full stack with a
+# single command: `docker compose up --build`. The non-Docker path is documented
+# in README.md and works independently.
+
+services:
+  # --- MySQL database ---
+  mysql:
+    image: mysql:8.0
+    container_name: addressbook_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: address_book
+      MYSQL_USER: address_book
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # --- Laravel API ---
+  backend:
+    build:
+      context: ./backend
+    container_name: addressbook_backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: address_book
+      DB_USERNAME: address_book
+      DB_PASSWORD: secret
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - ./backend:/var/www/html
+      - backend_vendor:/var/www/html/vendor
+
+  # --- React SPA (Vite dev server) ---
+  frontend:
+    image: node:24
+    container_name: addressbook_frontend
+    restart: unless-stopped
+    working_dir: /app
+    depends_on:
+      - backend
+    environment:
+      VITE_API_BASE_URL: http://localhost:8000/api
+    command: sh -c "npm install && npm run dev -- --host --port 3000"
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+  # --- phpMyAdmin (convenience DB UI) ---
+  phpmyadmin:
+    image: phpmyadmin:5
+    container_name: addressbook_phpmyadmin
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 64M
+    ports:
+      - "127.0.0.1:8080:80"
+
+volumes:
+  mysql_data:
+  backend_vendor:
