@@ -10,10 +10,9 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (token) {
-      fetchUser();
-    } else {
-      setLoading(false);
+      return fetchUser();
     }
+    setLoading(false);
   }, [token]);
 
   const fetchUser = async () => {
@@ -22,7 +21,6 @@ export const AuthProvider = ({ children }) => {
       setUser(response.data.data);
     } catch (error) {
       console.error('Failed to fetch user', error);
-      // token is invalid, let the axios interceptor handle the redirect/logout
       setToken(null);
       setUser(null);
     } finally {
