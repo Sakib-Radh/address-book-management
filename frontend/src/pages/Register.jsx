@@ -53,17 +53,17 @@ export default function Register() {
       showToast('Registration successful!', 'success');
       navigate('/');
     } catch (err) {
+      
       if (err.response?.data?.errors) {
-        // Map backend array errors to single strings
         const formattedErrors = {};
         Object.keys(err.response.data.errors).forEach(key => {
           formattedErrors[key] = err.response.data.errors[key][0];
         });
-        setFieldErrors(formattedErrors);
-      } else {
-        const msg = err.response?.data?.message || 'Something went wrong. Please try again.';
-        showToast(msg, 'error');
+        return setFieldErrors(formattedErrors);
       }
+
+      const msg = err.response?.data?.message || 'Something went wrong. Please try again.';
+      showToast(msg, 'error');
     } finally {
       setIsSubmitting(false);
     }
