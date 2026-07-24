@@ -22,7 +22,6 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.get('/me');
       setUser(response.data.data);
     } catch (error) {
-      // Quietly log out if the token is invalid (usually on initial load)
       setToken(null);
       setUser(null);
     } finally {

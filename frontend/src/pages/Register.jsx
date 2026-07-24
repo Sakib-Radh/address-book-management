@@ -11,6 +11,7 @@ export default function Register() {
     password: '',
     password_confirmation: ''
   });
+  const [fieldErrors, setFieldErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const { register } = useAuth();
@@ -19,13 +20,29 @@ export default function Register() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    if (fieldErrors[name]) {
+      setFieldErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setFieldErrors({});
+    let hasError = false;
+    const errors = {};
+
+    if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      errors.email = 'Please enter a valid email address.';
+      hasError = true;
+    }
     
     if (formData.password !== formData.password_confirmation) {
-      showToast('Passwords do not match', 'error');
+      errors.password_confirmation = 'Passwords do not match.';
+      hasError = true;
+    }
+
+    if (hasError) {
+      setFieldErrors(errors);
       return;
     }
 
@@ -36,8 +53,17 @@ export default function Register() {
       showToast('Registration successful!', 'success');
       navigate('/');
     } catch (err) {
-      const msg = err.response?.data?.message || 'Something went wrong. Please try again.';
-      showToast(msg, 'error');
+      if (err.response?.status === 422 && err.response.data.errors) {
+        // Map backend array errors to single strings
+        const formattedErrors = {};
+        Object.keys(err.response.data.errors).forEach(key => {
+          formattedErrors[key] = err.response.data.errors[key][0];
+        });
+        setFieldErrors(formattedErrors);
+      } else {
+        const msg = err.response?.data?.message || 'Something went wrong. Please try again.';
+        showToast(msg, 'error');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -68,9 +94,16 @@ export default function Register() {
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
+                  className={`block w-full appearance-none rounded-md border px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none sm:text-sm ${
+                    fieldErrors.name 
+                      ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
+                      : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                  }`}
                   placeholder="John Doe"
                 />
+                {fieldErrors.name && (
+                  <p className="mt-1 text-sm text-red-600">{fieldErrors.name}</p>
+                )}
               </div>
             </div>
 
@@ -87,9 +120,16 @@ export default function Register() {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
+                  className={`block w-full appearance-none rounded-md border px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none sm:text-sm ${
+                    fieldErrors.email 
+                      ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
+                      : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                  }`}
                   placeholder="admin@example.com"
                 />
+                {fieldErrors.email && (
+                  <p className="mt-1 text-sm text-red-600">{fieldErrors.email}</p>
+                )}
               </div>
             </div>
 
@@ -106,9 +146,16 @@ export default function Register() {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
+                  className={`block w-full appearance-none rounded-md border px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none sm:text-sm ${
+                    fieldErrors.password 
+                      ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
+                      : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                  }`}
                   placeholder="Minimum 8 characters"
                 />
+                {fieldErrors.password && (
+                  <p className="mt-1 text-sm text-red-600">{fieldErrors.password}</p>
+                )}
               </div>
             </div>
 
@@ -125,9 +172,16 @@ export default function Register() {
                   required
                   value={formData.password_confirmation}
                   onChange={handleChange}
-                  className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
+                  className={`block w-full appearance-none rounded-md border px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none sm:text-sm ${
+                    fieldErrors.password_confirmation 
+                      ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
+                      : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                  }`}
                   placeholder="Confirm your password"
                 />
+                {fieldErrors.password_confirmation && (
+                  <p className="mt-1 text-sm text-red-600">{fieldErrors.password_confirmation}</p>
+                )}
               </div>
             </div>
           </div>
