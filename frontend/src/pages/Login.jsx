@@ -21,17 +21,8 @@ export default function Login() {
       showToast('Welcome back!', 'success');
       navigate('/');
     } catch (err) {
-      if (err.response?.status === 422) {
-        const msg = err.response.data.message || 'Invalid credentials';
-        if (err.response.data.errors) {
-          const firstError = Object.values(err.response.data.errors)[0][0];
-          showToast(firstError || msg, 'error');
-        } else {
-          showToast(msg, 'error');
-        }
-      } else {
-        showToast('Something went wrong. Please try again.', 'error');
-      }
+      const msg = err.response?.data?.message || 'Something went wrong. Please try again.';
+      showToast(msg, 'error');
     } finally {
       setIsSubmitting(false);
     }

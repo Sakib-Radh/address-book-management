@@ -36,17 +36,8 @@ export default function Register() {
       showToast('Registration successful!', 'success');
       navigate('/');
     } catch (err) {
-      if (err.response?.status === 422) {
-        const msg = err.response.data.message || 'Validation failed';
-        if (err.response.data.errors) {
-          const firstError = Object.values(err.response.data.errors)[0][0];
-          showToast(firstError || msg, 'error');
-        } else {
-          showToast(msg, 'error');
-        }
-      } else {
-        showToast('Something went wrong. Please try again.', 'error');
-      }
+      const msg = err.response?.data?.message || 'Something went wrong. Please try again.';
+      showToast(msg, 'error');
     } finally {
       setIsSubmitting(false);
     }
