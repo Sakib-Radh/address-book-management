@@ -1,16 +1,27 @@
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import Layout from './components/Layout';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+
 function App() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 text-gray-800">
-      <div className="text-center">
-        <h1 className="text-3xl font-semibold text-gray-900">
-          Address Book Management
-        </h1>
-        <p className="mt-2 text-gray-500">
-          Frontend scaffolding ready — React + Vite + Tailwind.
-        </p>
-      </div>
-    </div>
-  )
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          
+          <Route element={<ProtectedRoute />}>
+            <Route element={<Layout />}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Route>
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  );
 }
 
-export default App
+export default App;
