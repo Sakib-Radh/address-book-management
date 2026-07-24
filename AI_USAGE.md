@@ -12,11 +12,45 @@ valuable prompts and real bugs, not routine back-and-forth.
   entirely through Docker containers (host had no PHP/Composer/MySQL).
 - **Docker setup & debugging:** Authoring `docker-compose.yml` and the backend image,
   then diagnosing build/runtime failures from container logs.
+- **Backend core logic (Phase 2):** Model/migration/factory/seeder, Sanctum auth,
+  Form Request validation, the CRUD controller with search/filter/pagination, a
+  standardized API response envelope with a single global exception handler, and
+  the PHPUnit feature tests — then verifying the whole API end-to-end over HTTP.
 - _(Later phases will be added as they are built.)_
 
-## One prompt / approach that worked well
+## Prompts / approaches that worked well
 
-**Approach: a phase-by-phase implementation plan, where each phase is a self-contained
+**1. A standing "engineering quality bar" prompt, applied to every implementation
+phase.** Rather than re-specifying quality expectations each time, one reusable
+instruction set the bar up front:
+
+> "Design and implement this like a senior software engineer / architect would.
+> Standing constraints: no database queries inside loops (avoid N+1 — eager-load or
+> batch); prefer the framework's idiomatic construct over ad-hoc code; single,
+> reusable abstractions over copy-paste; validate at the boundary; and keep a
+> standard, predictable response shape. Before finishing, re-read the diff for
+> anything a senior reviewer would flag."
+
+Why it worked: it front-loaded architectural intent, so generated code arrived
+already close to review-ready (e.g. filtering built as one fluent query builder
+chain instead of repeated `if` blocks) and cut the number of correction rounds.
+
+**2. A single, prescriptive prompt for the API response contract.** Defining the
+exact envelope once — instead of letting each endpoint invent its own shape — made
+the whole API predictable for the frontend:
+
+> "Standardize every API response into one envelope: `status` (true/false),
+> `message` (a human-readable, relatable message), and `data` (when present). Errors
+> return `status: false` with the exception's message. Always send the correct HTTP
+> status code (200/201/401/404/422/…). Add a single global exception handler that
+> receives the exception and produces this shape, so it is reused everywhere instead
+> of repeating try/catch in controllers."
+
+Why it worked: it produced one `ApiResponse` helper plus a global handler in
+`bootstrap/app.php`, so controllers return envelopes and never handle errors
+inline — and the React app can rely on exactly one structure for success and error.
+
+**3. A phase-by-phase implementation plan, where each phase is a self-contained
 prompt mapped 1:1 to the task requirements.** Example of one such phase prompt:
 
 > "Your task is Phase 2. In the `backend` Laravel project: create the `AddressBook`
