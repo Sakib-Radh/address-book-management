@@ -40,6 +40,18 @@ export const AuthProvider = ({ children }) => {
     return response.data;
   };
 
+  const register = async (userData) => {
+    const response = await axios.post('/register', userData);
+    const newToken = response.data.data?.token;
+    const newUserData = response.data.data?.user;
+    if (newToken) {
+      localStorage.setItem('auth_token', newToken);
+      setToken(newToken);
+      setUser(newUserData);
+    }
+    return response.data;
+  };
+
   const logout = async () => {
     try {
       if (token) {
@@ -55,7 +67,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
