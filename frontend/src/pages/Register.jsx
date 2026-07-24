@@ -53,7 +53,7 @@ export default function Register() {
       showToast('Registration successful!', 'success');
       navigate('/');
     } catch (err) {
-      if (err.response?.status === 422 && err.response.data.errors) {
+      if (err.response?.data?.errors) {
         // Map backend array errors to single strings
         const formattedErrors = {};
         Object.keys(err.response.data.errors).forEach(key => {
