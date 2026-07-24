@@ -12,7 +12,8 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (token) {
-      return fetchUser();
+      fetchUser();
+      return;
     }
     setLoading(false);
   }, [token]);
