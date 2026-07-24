@@ -1,35 +1,36 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { BookOpen, AlertCircle } from 'lucide-react';
+import { useToast } from '../contexts/ToastContext';
+import { BookOpen } from 'lucide-react';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { showToast } = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     setIsSubmitting(true);
 
     try {
       await login({ email, password });
+      showToast('Welcome back!', 'success');
       navigate('/');
     } catch (err) {
       if (err.response?.status === 422) {
         const msg = err.response.data.message || 'Invalid credentials';
         if (err.response.data.errors) {
           const firstError = Object.values(err.response.data.errors)[0][0];
-          setError(firstError || msg);
+          showToast(firstError || msg, 'error');
         } else {
-          setError(msg);
+          showToast(msg, 'error');
         }
       } else {
-        setError('Something went wrong. Please try again.');
+        showToast('Something went wrong. Please try again.', 'error');
       }
     } finally {
       setIsSubmitting(false);
@@ -45,15 +46,6 @@ export default function Login() {
             Sign in to your account
           </h2>
         </div>
-        
-        {error && (
-          <div className="rounded-md bg-red-50 p-4 border border-red-200">
-            <div className="flex items-center">
-              <AlertCircle className="h-5 w-5 text-red-500 mr-2" />
-              <div className="text-sm text-red-700">{error}</div>
-            </div>
-          </div>
-        )}
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">

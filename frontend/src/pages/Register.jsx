@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
-import { BookOpen, AlertCircle } from 'lucide-react';
+import { BookOpen } from 'lucide-react';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -11,7 +11,6 @@ export default function Register() {
     password: '',
     password_confirmation: ''
   });
-  const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const { register } = useAuth();
@@ -24,10 +23,9 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     
     if (formData.password !== formData.password_confirmation) {
-      setError('Passwords do not match');
+      showToast('Passwords do not match', 'error');
       return;
     }
 
@@ -42,14 +40,13 @@ export default function Register() {
         const msg = err.response.data.message || 'Validation failed';
         if (err.response.data.errors) {
           const firstError = Object.values(err.response.data.errors)[0][0];
-          setError(firstError || msg);
+          showToast(firstError || msg, 'error');
         } else {
-          setError(msg);
+          showToast(msg, 'error');
         }
       } else {
-        setError('Something went wrong. Please try again.');
+        showToast('Something went wrong. Please try again.', 'error');
       }
-      showToast('Registration failed.', 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -64,15 +61,6 @@ export default function Register() {
             Create an account
           </h2>
         </div>
-        
-        {error && (
-          <div className="rounded-md bg-red-50 p-4 border border-red-200">
-            <div className="flex items-center">
-              <AlertCircle className="h-5 w-5 text-red-500 mr-2" />
-              <div className="text-sm text-red-700">{error}</div>
-            </div>
-          </div>
-        )}
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">

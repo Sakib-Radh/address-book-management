@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import axios from '../lib/axios';
+import { useToast } from './ToastContext';
 
 const AuthContext = createContext();
 
@@ -7,6 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('auth_token') || null);
   const [loading, setLoading] = useState(true);
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (token) {
@@ -20,7 +22,7 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.get('/me');
       setUser(response.data.data);
     } catch (error) {
-      console.error('Failed to fetch user', error);
+      // Quietly log out if the token is invalid (usually on initial load)
       setToken(null);
       setUser(null);
     } finally {
@@ -58,7 +60,7 @@ export const AuthProvider = ({ children }) => {
         await axios.post('/logout');
       }
     } catch (error) {
-      console.error('Logout error', error);
+      showToast('Logout failed on the server.', 'error');
     } finally {
       localStorage.removeItem('auth_token');
       setToken(null);
