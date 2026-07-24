@@ -16,7 +16,10 @@ valuable prompts and real bugs, not routine back-and-forth.
   Form Request validation, the CRUD controller with search/filter/pagination, a
   standardized API response envelope with a single global exception handler, and
   the PHPUnit feature tests — then verifying the whole API end-to-end over HTTP.
-- _(Later phases will be added as they are built.)_
+- **Frontend foundation & auth (Phase 3):** The Axios instance with request/response
+  interceptors, an `AuthContext` for login/logout/current-user, route guards, and
+  the Login screen — wired to the Phase 2 API and verified with a production build.
+- _(Phases 4–5 will be added as they are built.)_
 
 ## Prompts / approaches that worked well
 
@@ -64,6 +67,19 @@ prompt mapped 1:1 to the task requirements.** Example of one such phase prompt:
 Why it worked: each prompt is small, reviewable, and traceable back to a specific
 requirement, which kept the build incremental (one concern per commit) and made it
 easy to verify nothing in the spec was missed.
+
+**4. One centralized-auth prompt for the frontend, instead of per-request token
+handling.** Defining the auth plumbing once kept every component and API call free
+of scattered token reads and hardcoded URLs:
+
+> "Centralize auth in the React app: a single Axios instance whose request
+> interceptor attaches the bearer token and whose response interceptor clears it and
+> redirects to /login on a 401. Expose login / logout / current-user through one
+> `AuthContext`, and gate protected routes with a single guard component. No token
+> reads, redirects, or API URLs duplicated across components."
+
+Why it worked: authentication lives in exactly one place, so every screen inherits
+it automatically and the Phase 4 CRUD views need zero auth wiring of their own.
 
 **Debugging micro-approach that worked:** rather than guessing at Docker failures,
 reproduce the exact failing step (`docker compose build backend`) and read

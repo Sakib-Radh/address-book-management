@@ -25,9 +25,7 @@ export default function Register() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setFieldErrors({});
+  const validateForm = () => {
     let hasError = false;
     const errors = {};
 
@@ -43,6 +41,17 @@ export default function Register() {
 
     if (hasError) {
       setFieldErrors(errors);
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFieldErrors({});
+
+    if (!validateForm()) {
       return;
     }
 
