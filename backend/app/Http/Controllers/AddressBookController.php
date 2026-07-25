@@ -19,20 +19,27 @@ class AddressBookController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $perPage = min(max((int) $request->query('per_page', 15), 1), 100);
+        $requestedPerPage = $request->query('per_page');
+        $perPage = is_numeric($requestedPerPage) && (int) $requestedPerPage >= 1
+            ? min((int) $requestedPerPage, 100)
+            : 15;
+
+        $search = trim((string) $request->query('search', ''));
+        $gender = trim((string) $request->query('gender', ''));
+        $nationality = trim((string) $request->query('nationality', ''));
 
         $records = AddressBook::query()
-            ->when(trim((string) $request->query('search', '')), function ($query, string $search) {
+            ->when($search !== '', function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
                         ->orWhere('email', 'like', "%{$search}%")
                         ->orWhere('phone', 'like', "%{$search}%");
                 });
             })
-            ->when($request->query('gender'), fn ($query, $gender) => $query->where('gender', $gender))
-            ->when($request->query('nationality'), fn ($query, $nationality) => $query->where('nationality', 'like', "%{$nationality}%"))
-            ->when($request->filled('age_min'), fn ($query) => $query->where('age', '>=', (int) $request->query('age_min')))
-            ->when($request->filled('age_max'), fn ($query) => $query->where('age', '<=', (int) $request->query('age_max')))
+            ->when($gender !== '', fn ($query) => $query->where('gender', $gender))
+            ->when($nationality !== '', fn ($query) => $query->where('nationality', 'like', "%{$nationality}%"))
+            ->when(is_numeric($request->query('age_min')), fn ($query) => $query->where('age', '>=', (int) $request->query('age_min')))
+            ->when(is_numeric($request->query('age_max')), fn ($query) => $query->where('age', '<=', (int) $request->query('age_max')))
             ->latest('created_at')
             ->paginate($perPage);
 

@@ -6,6 +6,12 @@ import { useToast } from '../contexts/ToastContext';
 import Loader from '../components/common/Loader';
 import Button from '../components/common/Button';
 
+function withScheme(website) {
+  const trimmed = website.trim();
+  if (!trimmed) return '';
+  return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+}
+
 export default function AddressBookForm() {
   const { id } = useParams();
   const isEditMode = Boolean(id);
@@ -66,19 +72,38 @@ export default function AddressBookForm() {
       hasError = true;
     }
 
-    if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+    if (!formData.email.trim()) {
+      errors.email = 'Email is required.';
+      hasError = true;
+    } else if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
       errors.email = 'Please enter a valid email address.';
+      hasError = true;
+    } else if (formData.email.length > 255) {
+      errors.email = 'Email must not exceed 255 characters.';
       hasError = true;
     }
 
-    if (!formData.phone.match(/^\+?[0-9\s\-\(\)]{7,20}$/)) {
+    if (!formData.phone.match(/^\+?[0-9\s\-()]{7,20}$/)) {
       errors.phone = 'The phone must be 7-20 characters and may contain digits, spaces, +, -, and parentheses.';
       hasError = true;
     }
 
-    if (formData.website && !formData.website.match(/^(https?:\/\/)?[\w.-]+\.[a-z]{2,}/i)) {
-      errors.website = 'Please enter a valid URL.';
-      hasError = true;
+    if (formData.website) {
+      const candidate = withScheme(formData.website);
+      let parsed = null;
+      try {
+        parsed = new URL(candidate);
+      } catch {
+        parsed = null;
+      }
+
+      if (!parsed || !/^[^\s.]+(\.[^\s.]+)+$/.test(parsed.hostname)) {
+        errors.website = 'Please enter a valid URL, for example https://example.com';
+        hasError = true;
+      } else if (candidate.length > 255) {
+        errors.website = 'Website must not exceed 255 characters.';
+        hasError = true;
+      }
     }
 
     if (!['male', 'female', 'other'].includes(formData.gender)) {
@@ -86,10 +111,15 @@ export default function AddressBookForm() {
       hasError = true;
     }
 
-    const ageInt = parseInt(formData.age, 10);
-    if (!formData.age || isNaN(ageInt) || ageInt < 1 || ageInt > 150) {
+    if (!/^\d+$/.test(String(formData.age).trim())) {
       errors.age = 'Age must be an integer between 1 and 150.';
       hasError = true;
+    } else {
+      const ageInt = parseInt(formData.age, 10);
+      if (ageInt < 1 || ageInt > 150) {
+        errors.age = 'Age must be an integer between 1 and 150.';
+        hasError = true;
+      }
     }
 
     if (!formData.nationality.trim()) {
@@ -125,14 +155,9 @@ export default function AddressBookForm() {
 
     setIsSubmitting(true);
     try {
-      let formattedWebsite = formData.website;
-      if (formattedWebsite && !/^https?:\/\//i.test(formattedWebsite)) {
-        formattedWebsite = 'https://' + formattedWebsite;
-      }
-
       const payload = {
         ...formData,
-        website: formattedWebsite,
+        website: withScheme(formData.website),
         age: parseInt(formData.age, 10)
       };
 
@@ -229,7 +254,7 @@ export default function AddressBookForm() {
             <div className="md:col-span-2">
               <label htmlFor="website" className="block text-sm font-medium text-gray-700">Website</label>
               <input
-                type="url"
+                type="text"
                 id="website"
                 name="website"
                 value={formData.website}

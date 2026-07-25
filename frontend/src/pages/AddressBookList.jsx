@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Plus } from 'lucide-react';
 import axiosInstance from '../lib/axios';
 import { useToast } from '../contexts/ToastContext';
 import { useAuth } from '../contexts/AuthContext';
+import useDebounced from '../hooks/useDebounced';
 import DeleteConfirmationModal from '../components/common/DeleteConfirmationModal';
 import AddressBookFilters from '../components/address-book/AddressBookFilters';
 import AddressBookTable from '../components/address-book/AddressBookTable';
@@ -24,9 +24,12 @@ export default function AddressBookList() {
     age_min: '',
     age_max: ''
   });
-  
+
+  const debouncedSearch = useDebounced(search, 300);
+  const debouncedNationality = useDebounced(filters.nationality, 300);
+
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(15);
+  const [perPage] = useState(15);
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [recordToDelete, setRecordToDelete] = useState(null);
@@ -38,9 +41,9 @@ export default function AddressBookList() {
       const params = {
         page,
         per_page: perPage,
-        search,
+        ...(debouncedSearch && { search: debouncedSearch }),
         ...(filters.gender && { gender: filters.gender }),
-        ...(filters.nationality && { nationality: filters.nationality }),
+        ...(debouncedNationality && { nationality: debouncedNationality }),
         ...(filters.age_min && { age_min: filters.age_min }),
         ...(filters.age_max && { age_max: filters.age_max }),
       };
@@ -56,18 +59,30 @@ export default function AddressBookList() {
         setIsLoading(false);
       }
     }
-  }, [page, perPage, search, filters, showToast]);
+  }, [page, perPage, debouncedSearch, debouncedNationality, filters.gender, filters.age_min, filters.age_max, showToast]);
+
+  const querySignature = JSON.stringify({
+    search: debouncedSearch,
+    gender: filters.gender,
+    nationality: debouncedNationality,
+    age_min: filters.age_min,
+    age_max: filters.age_max,
+  });
+
+  const lastSignature = useRef(null);
 
   useEffect(() => {
+    if (lastSignature.current !== null && lastSignature.current !== querySignature && page !== 1) {
+      lastSignature.current = querySignature;
+      setPage(1);
+      return;
+    }
+    lastSignature.current = querySignature;
+
     const controller = new AbortController();
     fetchRecords(controller.signal);
     return () => controller.abort();
-  }, [fetchRecords]);
-
-  // Reset page to 1 when search or filters change
-  useEffect(() => {
-    setPage(1);
-  }, [search, filters]);
+  }, [querySignature, page, fetchRecords]);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -81,17 +96,25 @@ export default function AddressBookList() {
 
   const handleDelete = async () => {
     if (!recordToDelete) return;
+    
     setIsDeleting(true);
     try {
       const response = await axiosInstance.delete(`/address-books/${recordToDelete.id}`);
-      if (response.data.status) {
-        showToast('Entry deleted successfully.', 'success');
-        setDeleteModalOpen(false);
-        setRecordToDelete(null);
-        fetchRecords();
+      
+      if (!response.data.status) {
+        throw new Error('Failed to delete entry.');
       }
+
+      showToast('Entry deleted successfully.', 'success');
+      setDeleteModalOpen(false);
+      setRecordToDelete(null);
+
+      records.length === 1 && page > 1 
+        ? setPage(p => p - 1) 
+        : fetchRecords();
+        
     } catch (error) {
-      showToast('Failed to delete entry.', 'error');
+      showToast(error.response?.data?.message || 'Failed to delete entry.', 'error');
     } finally {
       setIsDeleting(false);
     }
