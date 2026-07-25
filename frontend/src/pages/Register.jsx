@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import { BookOpen } from 'lucide-react';
+import Button from '../components/common/Button';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -79,11 +80,15 @@ export default function Register() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8 text-gray-900 py-12">
-      <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-xl shadow-sm ring-1 ring-gray-900/5">
-        <div className="flex flex-col items-center justify-center">
-          <BookOpen className="h-12 w-12 text-blue-600 mb-4" />
-          <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-50/50 via-slate-50 to-slate-50">
+      <div className="w-full max-w-md space-y-8 bg-white/80 backdrop-blur-xl p-8 sm:p-10 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white">
+        <div>
+          <div className="flex justify-center">
+            <div className="bg-gradient-to-br from-indigo-500 to-violet-500 p-3 rounded-2xl shadow-md">
+              <BookOpen className="h-8 w-8 text-white" />
+            </div>
+          </div>
+          <h2 className="mt-6 text-center text-3xl font-extrabold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
             Create an account
           </h2>
         </div>
@@ -91,7 +96,7 @@ export default function Register() {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="name" className="block text-sm font-medium text-slate-700">
                 Full Name
               </label>
               <div className="mt-1">
@@ -99,14 +104,13 @@ export default function Register() {
                   id="name"
                   name="name"
                   type="text"
-                  autoComplete="name"
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  className={`block w-full appearance-none rounded-md border px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none sm:text-sm ${
+                  className={`block w-full appearance-none rounded-xl border px-4 py-3 text-slate-900 placeholder-slate-400 focus:outline-none sm:text-sm bg-white/50 ${
                     fieldErrors.name 
                       ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
-                      : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                      : 'border-slate-200 focus:border-indigo-500 focus:ring-indigo-500'
                   }`}
                   placeholder="John Doe"
                 />
@@ -117,7 +121,7 @@ export default function Register() {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="block text-sm font-medium text-slate-700">
                 Email address
               </label>
               <div className="mt-1">
@@ -129,12 +133,12 @@ export default function Register() {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className={`block w-full appearance-none rounded-md border px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none sm:text-sm ${
+                  className={`block w-full appearance-none rounded-xl border px-4 py-3 text-slate-900 placeholder-slate-400 focus:outline-none sm:text-sm bg-white/50 ${
                     fieldErrors.email 
                       ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
-                      : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                      : 'border-slate-200 focus:border-indigo-500 focus:ring-indigo-500'
                   }`}
-                  placeholder="admin@example.com"
+                  placeholder="john@example.com"
                 />
                 {fieldErrors.email && (
                   <p className="mt-1 text-sm text-red-600">{fieldErrors.email}</p>
@@ -143,7 +147,7 @@ export default function Register() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium text-slate-700">
                 Password
               </label>
               <div className="mt-1">
@@ -151,16 +155,15 @@ export default function Register() {
                   id="password"
                   name="password"
                   type="password"
-                  autoComplete="new-password"
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className={`block w-full appearance-none rounded-md border px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none sm:text-sm ${
+                  className={`block w-full appearance-none rounded-xl border px-4 py-3 text-slate-900 placeholder-slate-400 focus:outline-none sm:text-sm bg-white/50 ${
                     fieldErrors.password 
                       ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
-                      : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                      : 'border-slate-200 focus:border-indigo-500 focus:ring-indigo-500'
                   }`}
-                  placeholder="Minimum 8 characters"
+                  placeholder="Create a password"
                 />
                 {fieldErrors.password && (
                   <p className="mt-1 text-sm text-red-600">{fieldErrors.password}</p>
@@ -169,7 +172,7 @@ export default function Register() {
             </div>
 
             <div>
-              <label htmlFor="password_confirmation" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password_confirmation" className="block text-sm font-medium text-slate-700">
                 Confirm Password
               </label>
               <div className="mt-1">
@@ -177,14 +180,13 @@ export default function Register() {
                   id="password_confirmation"
                   name="password_confirmation"
                   type="password"
-                  autoComplete="new-password"
                   required
                   value={formData.password_confirmation}
                   onChange={handleChange}
-                  className={`block w-full appearance-none rounded-md border px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none sm:text-sm ${
+                  className={`block w-full appearance-none rounded-xl border px-4 py-3 text-slate-900 placeholder-slate-400 focus:outline-none sm:text-sm bg-white/50 ${
                     fieldErrors.password_confirmation 
                       ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
-                      : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                      : 'border-slate-200 focus:border-indigo-500 focus:ring-indigo-500'
                   }`}
                   placeholder="Confirm your password"
                 />
@@ -196,13 +198,13 @@ export default function Register() {
           </div>
 
           <div>
-            <button
+            <Button
               type="submit"
-              disabled={isSubmitting}
-              className="group relative flex w-full justify-center rounded-md border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed transition-colors"
+              className="w-full"
+              isLoading={isSubmitting}
             >
               {isSubmitting ? 'Creating account...' : 'Create account'}
-            </button>
+            </Button>
           </div>
           
           <div className="text-center text-sm text-gray-600">

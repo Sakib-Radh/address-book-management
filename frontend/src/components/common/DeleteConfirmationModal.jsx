@@ -1,5 +1,6 @@
 import React from 'react';
 import { AlertTriangle } from 'lucide-react';
+import Button from './Button';
 
 export default function DeleteConfirmationModal({ isOpen, onClose, onConfirm, isDeleting }) {
   if (!isOpen) return null;
@@ -21,22 +22,22 @@ export default function DeleteConfirmationModal({ isOpen, onClose, onConfirm, is
           </div>
         </div>
         <div className="bg-gray-50 px-6 py-4 flex justify-end gap-3">
-          <button
+          <Button
             type="button"
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition-colors"
+            variant="secondary"
             onClick={onClose}
             disabled={isDeleting}
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
-            className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 transition-colors"
+            variant="danger"
             onClick={onConfirm}
-            disabled={isDeleting}
+            isLoading={isDeleting}
           >
             {isDeleting ? 'Deleting...' : 'Delete'}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

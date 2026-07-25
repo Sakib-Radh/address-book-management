@@ -4,6 +4,7 @@ import { ArrowLeft, Save } from 'lucide-react';
 import axiosInstance from '../lib/axios';
 import { useToast } from '../contexts/ToastContext';
 import Loader from '../components/common/Loader';
+import Button from '../components/common/Button';
 
 export default function AddressBookForm() {
   const { id } = useParams();
@@ -294,20 +295,22 @@ export default function AddressBookForm() {
           </div>
 
           <div className="pt-5 flex justify-end gap-3 border-t border-gray-100">
-            <Link
+            <Button
               to="/address-book"
-              className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              variant="secondary"
             >
               Cancel
-            </Link>
-            <button
+            </Button>
+            <Button
               type="submit"
-              disabled={isSubmitting}
-              className="inline-flex items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed"
+              isLoading={isSubmitting}
+              icon={Save}
             >
-              <Save className="-ml-1 mr-2 h-4 w-4" />
-              {isSubmitting ? 'Saving...' : 'Save Entry'}
-            </button>
+              {id 
+                ? (isSubmitting ? 'Updating...' : 'Update Entry')
+                : (isSubmitting ? 'Saving...' : 'Save Entry')
+              }
+            </Button>
           </div>
         </form>
       </div>

@@ -3,16 +3,17 @@ import { Link } from 'react-router-dom';
 import { Edit2, Trash2 } from 'lucide-react';
 import Loader from '../common/Loader';
 
-export default function AddressBookTable({ records, isLoading, user, confirmDelete }) {
+export default function AddressBookTable({ records, isLoading, user, confirmDelete, startIndex = 0 }) {
   return (
     <div className="mt-4 flow-root">
       <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-          <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+          <div className="overflow-hidden shadow-md ring-1 ring-slate-200 border-t-4 border-[#1360ae] sm:rounded-lg">
             <table className="min-w-full divide-y divide-gray-300">
-              <thead className="bg-gray-50">
+              <thead className="bg-slate-50/80">
                 <tr>
-                  <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Name</th>
+                  <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-slate-900 sm:pl-6 w-12">#</th>
+                  <th scope="col" className="py-3.5 px-3 text-left text-sm font-semibold text-slate-900">Name</th>
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Contact</th>
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Demographics</th>
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 hidden md:table-cell">Website</th>
@@ -22,20 +23,23 @@ export default function AddressBookTable({ records, isLoading, user, confirmDele
               <tbody className="divide-y divide-gray-200 bg-white">
                 {isLoading ? (
                   <tr>
-                    <td colSpan="5" className="py-10 text-center">
+                    <td colSpan="6" className="py-10 text-center">
                       <Loader />
                     </td>
                   </tr>
                 ) : records.length === 0 ? (
                   <tr>
-                    <td colSpan="5" className="py-10 text-center text-gray-500">
+                    <td colSpan="6" className="py-10 text-center text-gray-500">
                       No address book entries found.
                     </td>
                   </tr>
                 ) : (
-                  records.map((record) => (
-                    <tr key={record.id}>
-                      <td className="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 break-words max-w-xs">
+                  records.map((record, index) => (
+                    <tr key={record.id} className="hover:bg-slate-50/50 transition-colors">
+                      <td className="py-4 pl-4 pr-3 text-sm text-slate-500 sm:pl-6">
+                        {startIndex + index + 1}
+                      </td>
+                      <td className="py-4 px-3 text-sm font-medium text-slate-900 break-words max-w-xs">
                         {record.name}
                       </td>
                       <td className="px-3 py-4 text-sm text-gray-500 break-words max-w-xs">

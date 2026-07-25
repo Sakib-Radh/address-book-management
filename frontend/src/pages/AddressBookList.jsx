@@ -8,6 +8,7 @@ import DeleteConfirmationModal from '../components/common/DeleteConfirmationModa
 import AddressBookFilters from '../components/address-book/AddressBookFilters';
 import AddressBookTable from '../components/address-book/AddressBookTable';
 import Pagination from '../components/common/Pagination';
+import Button from '../components/common/Button';
 
 export default function AddressBookList() {
   const [records, setRecords] = useState([]);
@@ -100,16 +101,12 @@ export default function AddressBookList() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h2 className="text-2xl font-bold text-gray-900">Address Book</h2>
-        <Link
-          to="/address-book/create"
-          className="inline-flex items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-        >
-          <Plus className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+        <Button to="/address-book/create" icon={Plus}>
           Add New Entry
-        </Link>
+        </Button>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm ring-1 ring-gray-900/5 p-4 sm:p-6 space-y-4">
+      <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-200 p-4 sm:p-6 space-y-4">
         {/* Filters and Search Bar */}
         <AddressBookFilters
           search={search}
@@ -124,6 +121,7 @@ export default function AddressBookList() {
           isLoading={isLoading}
           user={user}
           confirmDelete={confirmDelete}
+          startIndex={(page - 1) * perPage}
         />
 
         {/* Pagination */}

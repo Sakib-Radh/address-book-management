@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import { BookOpen } from 'lucide-react';
+import Button from '../components/common/Button';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -29,19 +30,23 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8 text-gray-900">
-      <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-xl shadow-sm ring-1 ring-gray-900/5">
-        <div className="flex flex-col items-center justify-center">
-          <BookOpen className="h-12 w-12 text-blue-600 mb-4" />
-          <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900">
-            Sign in to your account
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-50/50 via-slate-50 to-slate-50">
+      <div className="w-full max-w-md space-y-8 bg-white/80 backdrop-blur-xl p-8 sm:p-10 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white">
+        <div>
+          <div className="flex justify-center">
+            <div className="bg-gradient-to-br from-indigo-500 to-violet-500 p-3 rounded-2xl shadow-md">
+              <BookOpen className="h-8 w-8 text-white" />
+            </div>
+          </div>
+          <h2 className="mt-6 text-center text-3xl font-extrabold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+            Welcome back
           </h2>
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-slate-700">
                 Email address
               </label>
               <div className="mt-1">
@@ -53,14 +58,14 @@ export default function Login() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
-                  placeholder="admin@example.com"
+                  className="block w-full appearance-none rounded-xl border border-slate-200 px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm bg-white/50"
+                  placeholder="john@example.com"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium text-slate-700">
                 Password
               </label>
               <div className="mt-1">
@@ -72,7 +77,7 @@ export default function Login() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
+                  className="block w-full appearance-none rounded-xl border border-slate-200 px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm bg-white/50"
                   placeholder="password"
                 />
               </div>
@@ -80,13 +85,13 @@ export default function Login() {
           </div>
 
           <div>
-            <button
+            <Button
               type="submit"
-              disabled={isSubmitting}
-              className="group relative flex w-full justify-center rounded-md border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed transition-colors"
+              className="w-full"
+              isLoading={isSubmitting}
             >
               {isSubmitting ? 'Signing in...' : 'Sign in'}
-            </button>
+            </Button>
           </div>
           
           <div className="text-center text-sm text-gray-600">
