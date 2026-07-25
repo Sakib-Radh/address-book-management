@@ -164,9 +164,30 @@ From the repository root:
 docker compose up --build
 ```
 
-That single command builds the images, waits for MySQL, runs the migrations, and
-seeds the database on first boot. No manual `.env`, `composer install`, or
-`npm install` step is needed — the containers handle all of it.
+That is the only command required. No manual `.env`, `composer install`, or
+`npm install` step is needed — on first boot the backend container automatically:
+
+1. Creates `backend/.env` from `.env.example` and points it at the `mysql` service.
+2. Generates the Laravel `APP_KEY`.
+3. Waits for MySQL to accept connections.
+4. Runs all database migrations.
+5. **Seeds the database** with the default admin user and 50 sample address book
+   records.
+
+Seeding runs **only when the database is empty**, so restarting the stack will not
+create duplicate records. To start over from scratch, run `docker compose down -v`
+(which wipes the MySQL volume) and bring the stack back up.
+
+### Default login (created by the seeder on first boot)
+
+| Email | Password |
+|-------|----------|
+| `admin@example.com` | `password` |
+
+These are the same credentials as the standard installation — the identical seeder
+runs in both cases. You can also register a new account from the login screen.
+
+### Service URLs
 
 | Service    | URL                     |
 |------------|-------------------------|
@@ -174,13 +195,12 @@ seeds the database on first boot. No manual `.env`, `composer install`, or
 | API        | http://127.0.0.1:8000   |
 | phpMyAdmin | http://localhost:8080   |
 
-Sign in with the same seeded credentials (`admin@example.com` / `password`).
-
 Useful commands:
 
 ```bash
 docker compose exec backend php artisan test      # run the test suite
 docker compose exec backend php artisan migrate   # run new migrations
+docker compose exec backend php artisan db:seed   # re-seed manually if needed
 docker compose down -v                            # stop and wipe the database
 ```
 
