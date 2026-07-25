@@ -3,7 +3,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Save } from 'lucide-react';
 import axiosInstance from '../lib/axios';
 import { useToast } from '../contexts/ToastContext';
-import Loader from '../components/Loader';
+import Loader from '../components/common/Loader';
 
 export default function AddressBookForm() {
   const { id } = useParams();
