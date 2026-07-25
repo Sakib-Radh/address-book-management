@@ -22,7 +22,7 @@ docker-compose.yml  backend :8000, frontend :3000, mysql :3306, phpmyadmin :8080
   gender, age, nationality, created_at, updated_at, created_by`.
   `updated_at` is a **deliberate addition** to the task's column list — records are
   editable, so knowing when one last changed is genuinely useful. See README
-  ("Deliberate deviations from the spec") for the full rationale.
+  ("Implementation notes") for the full rationale.
 - Row-level authorization is enforced via `AddressBookPolicy` (users can only update/delete records they created).
 - `created_by` is always derived from the authenticated user, never from client input.
 - Validation lives in a Form Request (`AddressBookRequest`, shared by store + update
