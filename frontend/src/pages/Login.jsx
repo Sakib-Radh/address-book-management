@@ -19,7 +19,7 @@ export default function Login() {
     try {
       await login({ email, password });
       showToast('Welcome back!', 'success');
-      navigate('/');
+      navigate('/address-book');
     } catch (err) {
       const msg = err.response?.data?.message || 'Something went wrong. Please try again.';
       showToast(msg, 'error');

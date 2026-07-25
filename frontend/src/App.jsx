@@ -6,7 +6,8 @@ import GuestRoute from './components/GuestRoute';
 import Layout from './components/Layout';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
+import AddressBookList from './pages/AddressBookList';
+import AddressBookForm from './pages/AddressBookForm';
 
 function App() {
   return (
@@ -21,8 +22,11 @@ function App() {
             
             <Route element={<ProtectedRoute />}>
               <Route element={<Layout />}>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
+                <Route path="/" element={<Navigate to="/address-book" replace />} />
+                <Route path="/address-book" element={<AddressBookList />} />
+                <Route path="/address-book/create" element={<AddressBookForm />} />
+                <Route path="/address-book/edit/:id" element={<AddressBookForm />} />
+                <Route path="*" element={<Navigate to="/address-book" replace />} />
               </Route>
             </Route>
           </Routes>

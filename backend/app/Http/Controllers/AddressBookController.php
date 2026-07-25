@@ -7,6 +7,7 @@ use App\Models\AddressBook;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class AddressBookController extends Controller
 {
@@ -60,6 +61,7 @@ class AddressBookController extends Controller
      */
     public function update(AddressBookRequest $request, AddressBook $addressBook): JsonResponse
     {
+        Gate::authorize('update', $addressBook);
         $addressBook->fill($request->validated());
         $addressBook->save();
 
@@ -71,6 +73,7 @@ class AddressBookController extends Controller
      */
     public function destroy(AddressBook $addressBook): JsonResponse
     {
+        Gate::authorize('delete', $addressBook);
         $addressBook->delete();
 
         return ApiResponse::success(null, 'Address book entry deleted.');

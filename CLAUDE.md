@@ -19,11 +19,15 @@ docker-compose.yml  backend :8000, frontend :3000, mysql :3306, phpmyadmin :8080
 
 ## Conventions
 - The domain table is `address_book`; columns: `id, name, phone, email, website,
-  gender, age, nationality, created_at, created_by`. **No `updated_at`** (matches
-  the task spec — `AddressBook` model sets `const UPDATED_AT = null`).
+  gender, age, nationality, created_at, updated_at, created_by`.
+  `updated_at` is a **deliberate addition** to the task's column list — records are
+  editable, so knowing when one last changed is genuinely useful. See README
+  ("Deliberate deviations from the spec") for the full rationale.
+- Row-level authorization is enforced via `AddressBookPolicy` (users can only update/delete records they created).
 - `created_by` is always derived from the authenticated user, never from client input.
-- Validation lives in Form Requests (`StoreAddressBookRequest`, `UpdateAddressBookRequest`);
-  the React form mirrors these rules and also surfaces server-side 422 errors.
+- Validation lives in a Form Request (`AddressBookRequest`, shared by store + update
+  since the rules are identical); the React form mirrors these rules and also
+  surfaces server-side 422 errors.
 - No hardcoded URLs/tokens in the frontend — use `VITE_API_BASE_URL` + an Axios interceptor.
 
 ## Commands

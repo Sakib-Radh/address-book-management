@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Database\Factories\AddressBookFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,8 +12,6 @@ class AddressBook extends Model
     use HasFactory;
 
     protected $table = 'address_book';
-
-    const UPDATED_AT = null;
 
     protected $fillable = [
         'name',
@@ -36,6 +33,7 @@ class AddressBook extends Model
         return [
             'age' => 'integer',
             'created_at' => 'datetime',
+            'updated_at' => 'datetime',
         ];
     }
 

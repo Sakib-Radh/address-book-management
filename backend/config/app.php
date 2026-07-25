@@ -60,12 +60,13 @@ return [
     |--------------------------------------------------------------------------
     |
     | Here you may specify the default timezone for your application, which
-    | will be used by the PHP date and date-time functions. The timezone
-    | is set to "UTC" by default as it is suitable for most use cases.
+    | will be used by the PHP date and date-time functions. Laravel ships with
+    | "UTC"; this project runs on "Asia/Dhaka" (UTC+6) so that stored and
+    | displayed timestamps match the local wall clock of its users.
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => env('APP_TIMEZONE', 'Asia/Dhaka'),
 
     /*
     |--------------------------------------------------------------------------

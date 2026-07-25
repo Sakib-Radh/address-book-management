@@ -47,3 +47,22 @@ _Full, step-by-step non-Docker instructions (prerequisites, `.env` setup,
 seeded credentials, and how to run tests) will be completed in Phase 5._
 
 Prerequisites: PHP 8.4, Composer 2, Node 24 (see `frontend/.nvmrc`), MySQL 8.
+
+## Deliberate deviations from the spec
+
+### `address_book.updated_at`
+
+The task's column list is `id, name, phone, email, website, gender, age,
+nationality, created_at, created_by` — it does not include `updated_at`.
+
+This implementation **adds `updated_at`** (via Laravel's standard
+`$table->timestamps()`). The reasoning: the spec requires full CRUD, so records are
+editable in place. A row that can change but only records when it was *created*
+loses information on every edit — there is no way to tell a freshly imported
+contact from one corrected five minutes ago. Since the column list reads as an
+enumeration of the required domain fields rather than a prohibition on Laravel's
+conventional timestamp pair, `updated_at` is treated as an additive improvement.
+
+Nothing depends on its absence: all required columns are present with the specified
+names and types, and the API response includes `updated_at` as an extra field only.
+

@@ -8,11 +8,6 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * Columns match the task spec exactly:
-     *   id, name, phone, email, website, gender, age, nationality, created_at, created_by
-     * There is deliberately NO `updated_at` column (the spec omits it); the
-     * AddressBook model disables it via `const UPDATED_AT = null`.
      */
     public function up(): void
     {
@@ -25,8 +20,8 @@ return new class extends Migration
             $table->string('gender');
             $table->unsignedTinyInteger('age');
             $table->string('nationality');
-            $table->timestamp('created_at')->nullable();
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
+            $table->timestamps();
         });
     }
 

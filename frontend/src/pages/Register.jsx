@@ -60,7 +60,7 @@ export default function Register() {
     try {
       await register(formData);
       showToast('Registration successful!', 'success');
-      navigate('/');
+      navigate('/address-book');
     } catch (err) {
       
       if (err.response?.data?.errors) {

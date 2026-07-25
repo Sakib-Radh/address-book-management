@@ -27,7 +27,7 @@ class AddressBookFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'phone' => fake()->numerify('+1##########'),
+            'phone' => fake()->numerify('+8801#########'),
             'email' => fake()->unique()->safeEmail(),
             'website' => fake()->optional(0.7)->url(),
             'gender' => fake()->randomElement(['male', 'female', 'other']),
