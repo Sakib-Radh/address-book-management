@@ -55,9 +55,15 @@ fully-supported path. Docker is offered afterwards as an optional convenience.
 |-------------|---------|
 | PHP         | 8.4 (8.3 minimum) with `pdo_mysql`, `bcmath`, `mbstring`, `openssl` |
 | Composer    | 2.x     |
-| Node.js     | 24 (see `frontend/.nvmrc`) |
-| npm         | 10+ (ships with Node 24) |
+| Node.js     | 24 recommended — any version **≥ 22.12** works (25 and 26 included) |
+| npm         | 10+ (ships with Node 22+) |
 | MySQL       | 8.x     |
+
+`frontend/.nvmrc` pins Node 24 because that is the version this project was built
+and tested against, so `nvm use` gives you a known-good setup. It is not a hard
+requirement: the real supported range is declared in `frontend/package.json` under
+`engines` (`^20.19.0 || >=22.12.0`, inherited from Vite 8). If you already run a
+newer Node, use it — there is no need to install 24 alongside it.
 
 ### 1. Create the database
 
@@ -119,7 +125,8 @@ running and open a second one for the frontend.
 ```bash
 cd frontend
 
-# Use the pinned Node version (if you use nvm)
+# Optional: switch to the pinned Node version via nvm.
+# Skip this if your existing Node is already 22.12 or newer.
 nvm use
 
 # Install JavaScript dependencies
