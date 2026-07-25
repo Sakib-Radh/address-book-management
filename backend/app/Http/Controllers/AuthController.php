@@ -13,6 +13,9 @@ class AuthController extends Controller
 {
     /**
      * Register a new user and issue a Sanctum access token.
+     *
+     * @param Request $request
+     * @return JsonResponse
      */
     public function register(Request $request): JsonResponse
     {
@@ -37,9 +40,11 @@ class AuthController extends Controller
         ], 'Registration successful.', 201);
     }
 
-
     /**
      * Authenticate a user and issue a Sanctum access token.
+     *
+     * @param Request $request
+     * @return JsonResponse
      */
     public function login(Request $request): JsonResponse
     {
@@ -66,18 +71,22 @@ class AuthController extends Controller
         ], 'Login successful.');
     }
 
-
     /**
      * Return the currently authenticated user.
+     *
+     * @param Request $request
+     * @return JsonResponse
      */
     public function me(Request $request): JsonResponse
     {
         return ApiResponse::success($request->user(), 'User retrieved.');
     }
 
-
     /**
      * Revoke the access token used for the current request.
+     *
+     * @param Request $request
+     * @return JsonResponse
      */
     public function logout(Request $request): JsonResponse
     {

@@ -13,6 +13,9 @@ class AddressBookController extends Controller
 {
     /**
      * List address book records with search, filtering, and pagination.
+     *
+     * @param Request $request
+     * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
     {
@@ -38,6 +41,9 @@ class AddressBookController extends Controller
 
     /**
      * Store a newly created record, deriving `created_by` from the authenticated user.
+     *
+     * @param AddressBookRequest $request
+     * @return JsonResponse
      */
     public function store(AddressBookRequest $request): JsonResponse
     {
@@ -50,6 +56,9 @@ class AddressBookController extends Controller
 
     /**
      * Display a single record.
+     *
+     * @param AddressBook $addressBook
+     * @return JsonResponse
      */
     public function show(AddressBook $addressBook): JsonResponse
     {
@@ -58,6 +67,10 @@ class AddressBookController extends Controller
 
     /**
      * Update an existing record. `created_by` is never reassigned.
+     *
+     * @param AddressBookRequest $request
+     * @param AddressBook $addressBook
+     * @return JsonResponse
      */
     public function update(AddressBookRequest $request, AddressBook $addressBook): JsonResponse
     {
@@ -70,6 +83,9 @@ class AddressBookController extends Controller
 
     /**
      * Remove a record.
+     *
+     * @param AddressBook $addressBook
+     * @return JsonResponse
      */
     public function destroy(AddressBook $addressBook): JsonResponse
     {

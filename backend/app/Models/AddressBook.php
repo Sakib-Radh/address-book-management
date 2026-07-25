@@ -37,7 +37,6 @@ class AddressBook extends Model
         ];
     }
 
-
     /**
      * The user who created this record.
      *
